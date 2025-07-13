@@ -156,7 +156,7 @@ uv run leaderboard.py -n 20
 
 *Submission and History:*
 ```bash
-# Display recent submission history (default 20 entries)
+# Display recent submission history (default 10 entries)
 uv run submit.py
 
 # Display recent 20 submission entries
