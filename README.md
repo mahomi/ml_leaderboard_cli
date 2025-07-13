@@ -95,19 +95,22 @@
 * Managed via a `config.yaml` file in YAML format
 Below are the key fields and their descriptions:
 
-| Field Name             | Description                                                                       | Example Value(s)        | Allowed Values / Notes                                                             |
-| ---------------------- | --------------------------------------------------------------------------------- | ----------------------- | ---------------------------------------------------------------------------------- |
-| `public_ground_truth`  | Path to the CSV file containing ground truth labels for the **public test** set.  | `./data/public_gt.csv`  | Must be a valid relative or absolute path to a CSV file.                           |
-| `private_ground_truth` | Path to the CSV file containing ground truth labels for the **private test** set. | `./data/private_gt.csv` | Must be a valid relative or absolute path to a CSV file.                           |
-| `top_k`                | Number of top submissions to show in the leaderboard output.                      | `10`                    | Positive integer (e.g., 1, 5, 10, 20, ...)                                         |
-| `metric`               | Evaluation metric to use when scoring predictions.                                | `rmse`                  | `rmse`, `mae`, `mse`, `f1`<br>*`f1` should only be used for classification tasks.* |
+| Field Name             | Description                                                                       | Example Value           | Allowed Values / Notes                                               |
+| ---------------------- | --------------------------------------------------------------------------------- | ----------------------- | -------------------------------------------------------------------- |
+| `public_ground_truth`  | Path to the CSV file containing ground truth labels for the **public test** set.  | `./data/public_gt.csv`  | Must be a valid relative or absolute path.                           |
+| `private_ground_truth` | Path to the CSV file containing ground truth labels for the **private test** set. | `./data/private_gt.csv` | Must be a valid relative or absolute path.                           |
+| `leaderboard_top_k`    | Number of top-ranked submissions to display in **leaderboard mode**.              | `10`                    | Positive integer (e.g., 5, 10, 20, ...)                              |
+| `history_limit`        | Number of recent submission entries to display in **submission history mode**.    | `20`                    | Positive integer (e.g., 5, 10, 50, ...)                              |
+| `metric`               | Evaluation metric used for scoring predictions.                                   | `rmse`                  | `rmse`, `mae`, `mse`, `f1` (Use `f1` only for classification tasks.) |
 
 * Example Fields:
-
-  * `public_ground_truth`: ./data/public\_gt.csv
-  * `private_ground_truth`: ./data/private\_gt.csv
-  * `top_k`: 10
-  * `metric`: rmse
+```yaml
+public_ground_truth: ./data/public_gt.csv
+private_ground_truth: ./data/private_gt.csv
+leaderboard_top_k: 10
+history_limit: 20
+metric: rmse
+```
 
 ---
 
