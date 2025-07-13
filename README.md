@@ -71,7 +71,7 @@
 
 ---
 
-### 3. Recommended Tech Stack
+### 3. Tech Stack
 
 * **Package Management & Execution:** Use [uv](https://github.com/astral-sh/uv)
 
