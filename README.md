@@ -94,6 +94,7 @@
 
 * Managed via a `config.yaml` file in YAML format
 Below are the key fields and their descriptions:
+
 | Field Name             | Description                                                                       | Example Value(s)        | Allowed Values / Notes                                                             |
 | ---------------------- | --------------------------------------------------------------------------------- | ----------------------- | ---------------------------------------------------------------------------------- |
 | `public_ground_truth`  | Path to the CSV file containing ground truth labels for the **public test** set.  | `./data/public_gt.csv`  | Must be a valid relative or absolute path to a CSV file.                           |
