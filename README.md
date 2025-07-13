@@ -106,7 +106,7 @@
 
 * `uv run leaderboard.py`: Display leaderboard
 * `uv run leaderboard.py --with-private`: Display leaderboard, including private score in output
-* `uv run leaderboard.py pred.csv`: Submit and evaluate
+* `uv run leaderboard.py pred.csv`: Submit and evaluate. Display submission history
 * `uv run leaderboard.py --history`: Display submission history
 
 ---
