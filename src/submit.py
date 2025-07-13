@@ -93,9 +93,9 @@ def main(args=None):
 
     if parsed.pred:
         username = parsed.username or get_git_username()
-        # Convert the prediction file path to be relative to the current working directory (src)
-        relative_pred_path = Path(parsed.pred).relative_to('src')
-        public_score, private_score = evaluate(relative_pred_path, cfg)
+        # Use the prediction file path as provided, resolving any relative paths
+        pred_path = Path(parsed.pred).resolve()
+        public_score, private_score = evaluate(pred_path, cfg)
         insert_submission(conn, username, os.path.basename(parsed.pred), public_score, private_score)
 
     print(fetch_history(conn, limit))
