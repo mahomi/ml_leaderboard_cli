@@ -88,8 +88,6 @@
 
 * **Evaluation:** Python + numpy/pandas/sklearn
 
-* **Execution Method:** CLI script `leaderboard.py`
-
 ---
 
 ### 4. Leaderboard Configuration File
