@@ -9,7 +9,6 @@ from datetime import datetime
 
 os.chdir(Path(__file__).parent)
 
-from evaluator import metrics as metric_lib
 
 CONFIG_PATH = 'config.yaml'
 DB_PATH = 'db/leaderboard.sqlite'
@@ -34,6 +33,8 @@ def init_db(conn):
 
 
 def evaluate(pred_path, cfg):
+    from evaluator import metrics as metric_lib
+
     metric_name = cfg.get('metric', 'rmse')
     metric_func = metric_lib.METRICS[metric_name]
     public_gt = pd.read_csv(cfg['public_ground_truth'])['label']
