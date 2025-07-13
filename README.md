@@ -12,6 +12,7 @@
 #### 2.1 User Interface
 
 * CLI-based submission and result viewing of prediction CSV files (no GUI)
+* No login, server, or web environment required
 
 #### 2.2 Data Processing and Evaluation Logic
 
@@ -38,10 +39,6 @@
 * **Submission History** (`submit.py`):
 
   * Columns: `Timestamp`, `Username`, `Filename`, `Public Score`
-
-* Username is automatically extracted from Git config
-
-* No login, server, or web environment required
 
 * Output Examples:
 
