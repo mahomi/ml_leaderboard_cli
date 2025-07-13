@@ -24,7 +24,7 @@
 
 * Auto-scoring system: compares submitted prediction CSV with ground truth to compute scores
 
-* **Leaderboard update timing:** Only when a CSV prediction file is passed as an argument to `leaderboard.py`
+* **Leaderboard update timing:** Only when a CSV prediction file is passed as an argument to `submit.py`
 
 * Public/Private scores and submission history are stored in a local SQLite database
 
@@ -95,20 +95,20 @@
 * Managed via a `config.yaml` file in YAML format
 Below are the key fields and their descriptions:
 
-| Field Name             | Description                                                                       | Example Value           | Allowed Values / Notes                                               |
-| ---------------------- | --------------------------------------------------------------------------------- | ----------------------- | -------------------------------------------------------------------- |
-| `public_ground_truth`  | Path to the CSV file containing ground truth labels for the **public test** set.  | `./data/public_gt.csv`  | Must be a valid relative or absolute path.                           |
-| `private_ground_truth` | Path to the CSV file containing ground truth labels for the **private test** set. | `./data/private_gt.csv` | Must be a valid relative or absolute path.                           |
-| `leaderboard_top_k`    | Number of top-ranked submissions to display in **leaderboard mode**.              | `10`                    | Positive integer (e.g., 5, 10, 20, ...)                              |
-| `history_limit`        | Number of recent submission entries to display in **submission history mode**.    | `20`                    | Positive integer (e.g., 5, 10, 50, ...)                              |
-| `metric`               | Evaluation metric used for scoring predictions.                                   | `rmse`                  | `rmse`, `mae`, `mse`, `f1` (Use `f1` only for classification tasks.) |
+| Field Name                    | Description                                                                       | Example Value           | Allowed Values / Notes                                               |
+| ----------------------------- | --------------------------------------------------------------------------------- | ----------------------- | -------------------------------------------------------------------- |
+| `public_ground_truth`        | Path to the CSV file containing ground truth labels for the **public test** set.  | `./data/public_gt.csv`  | Must be a valid relative or absolute path.                           |
+| `private_ground_truth`       | Path to the CSV file containing ground truth labels for the **private test** set. | `./data/private_gt.csv` | Must be a valid relative or absolute path.                           |
+| `default_leaderboard_limit`  | Default number of top-ranked submissions to display in **leaderboard mode**.      | `10`                    | Positive integer (e.g., 5, 10, 20, ...). Can be overridden with `-n` argument. |
+| `default_history_limit`      | Default number of recent submission entries to display in **submission history mode**. | `20`                    | Positive integer (e.g., 5, 10, 50, ...). Can be overridden with `-n` argument. |
+| `metric`                     | Evaluation metric used for scoring predictions.                                   | `rmse`                  | `rmse`, `mae`, `mse`, `f1` (Use `f1` only for classification tasks.) |ls
 
 * Example Fields:
 ```yaml
 public_ground_truth: ./data/public_gt.csv
 private_ground_truth: ./data/private_gt.csv
-leaderboard_top_k: 10
-history_limit: 20
+default_leaderboard_limit: 10
+default_history_limit: 20
 metric: rmse
 ```
 
@@ -116,10 +116,33 @@ metric: rmse
 
 ### 5. Execution Commands & Arguments
 
-* `uv run leaderboard.py`: Display leaderboard
-* `uv run leaderboard.py --with-private`: Display leaderboard, including private score in output
-* `uv run leaderboard.py pred.csv`: Submit and evaluate. Display submission history
-* `uv run leaderboard.py --history`: Display submission history
+#### 5.1 Leaderboard Display Commands (`leaderboard.py`)
+
+* `uv run leaderboard.py [options]`: Display leaderboard
+
+**Options:**
+- `-n N`: Number of top submissions to display (default: from config.yaml)
+- `--with-private`: Include private score in output
+
+#### 5.2 Submission and History Commands (`submit.py`)
+
+* `uv run submit.py [pred.csv] [username] [options]`: Submit prediction file or display submission history
+
+**Arguments:**
+- `pred.csv`: Path to the prediction CSV file
+  - **If provided**: Submit and evaluate the prediction file, then display submission history
+  - **If omitted**: Display submission history only
+- `[username]`: Username for the submission (only used when `pred.csv` is provided)
+  - **If provided**: Use the specified username for submission
+  - **If omitted**: Automatically extract username from Git config (`git config user.name`)
+  - **If Git config is not available**: Uses '-' as the username
+
+**Options:**
+- `-n N`: Number of recent submissions to display (default: from config.yaml)
+
+**Note:** The submission and history functionality has been separated into `submit.py` to provide clearer separation of concerns:
+- `leaderboard.py`: Focuses on displaying leaderboard rankings
+- `submit.py`: Handles prediction file submission and submission history viewing
 
 ---
 
@@ -127,7 +150,8 @@ metric: rmse
 
 ```
 prediction_leaderboard/
-├── leaderboard.py              # CLI script for evaluation and leaderboard display
+├── leaderboard.py              # CLI script for leaderboard display only
+├── submit.py                   # CLI script for submission and history management
 ├── config.yaml                 # Configuration file (GT paths, display options, etc.)
 ├── data/
 │   ├── public_gt.csv           # Example Public Test ground truth
@@ -139,6 +163,7 @@ prediction_leaderboard/
 │   └── metrics.py              # Evaluation metric implementations
 └── tests/                      # pytest-based test cases
     ├── test_metrics.py         # Tests for evaluation metrics
-    ├── test_leaderboard.py     # Tests for submission and leaderboard update
+    ├── test_leaderboard.py     # Tests for leaderboard display
+    ├── test_submit.py          # Tests for submission functionality
     └── test_cli_commands.py    # Tests for CLI command behavior
 ```
