@@ -100,7 +100,7 @@ Below are the key fields and their descriptions:
 | `public_ground_truth`        | Path to the CSV file containing ground truth labels for the **public test** set.  | `./data/public_gt.csv`  | Must be a valid relative or absolute path.                           |
 | `private_ground_truth`       | Path to the CSV file containing ground truth labels for the **private test** set. | `./data/private_gt.csv` | Must be a valid relative or absolute path.                           |
 | `default_leaderboard_limit`  | Default number of top-ranked submissions to display in **leaderboard mode**.      | `10`                    | Positive integer (e.g., 5, 10, 20, ...). Can be overridden with `-n` argument. |
-| `default_history_limit`      | Default number of recent submission entries to display in **submission history mode**. | `20`                    | Positive integer (e.g., 5, 10, 50, ...). Can be overridden with `-n` argument. |
+| `default_history_limit`      | Default number of recent submission entries to display in **submission history mode**. | `10`                    | Positive integer (e.g., 5, 10, 50, ...). Can be overridden with `-n` argument. |
 | `metric`                     | Evaluation metric used for scoring predictions.                                   | `rmse`                  | `rmse`, `mae`, `mse`, `f1` (Use `f1` only for classification tasks.) |ls
 
 * Example Fields:
@@ -108,7 +108,7 @@ Below are the key fields and their descriptions:
 public_ground_truth: ./data/public_gt.csv
 private_ground_truth: ./data/private_gt.csv
 default_leaderboard_limit: 10
-default_history_limit: 20
+default_history_limit: 10
 metric: rmse
 ```
 
@@ -143,6 +143,38 @@ metric: rmse
 **Note:** The submission and history functionality has been separated into `submit.py` to provide clearer separation of concerns:
 - `leaderboard.py`: Focuses on displaying leaderboard rankings
 - `submit.py`: Handles prediction file submission and submission history viewing
+
+**Usage Examples:**
+
+*Leaderboard Display:*
+```bash
+# Display top 10 submissions (default)
+uv run leaderboard.py
+
+# Display top 5 submissions with private scores
+uv run leaderboard.py -n 5 --with-private
+
+# Display top 20 submissions without private scores
+uv run leaderboard.py -n 20
+```
+
+*Submission and History:*
+```bash
+# Display recent submission history (default 20 entries)
+uv run submit.py
+
+# Display recent 20 submission entries
+uv run submit.py -n 20
+
+# Submit prediction file with auto-detected username
+uv run submit.py my_prediction.csv
+
+# Submit prediction file with custom username
+uv run submit.py my_prediction.csv alice
+
+# Submit prediction file and show top 5 recent submissions
+uv run submit.py my_prediction.csv -n 5
+```
 
 ---
 
