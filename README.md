@@ -93,6 +93,14 @@
 ### 4. Leaderboard Configuration File
 
 * Managed via a `config.yaml` file in YAML format
+Below are the key fields and their descriptions:
+| Field Name             | Description                                                                       | Example Value(s)        | Allowed Values / Notes                                                             |
+| ---------------------- | --------------------------------------------------------------------------------- | ----------------------- | ---------------------------------------------------------------------------------- |
+| `public_ground_truth`  | Path to the CSV file containing ground truth labels for the **public test** set.  | `./data/public_gt.csv`  | Must be a valid relative or absolute path to a CSV file.                           |
+| `private_ground_truth` | Path to the CSV file containing ground truth labels for the **private test** set. | `./data/private_gt.csv` | Must be a valid relative or absolute path to a CSV file.                           |
+| `top_k`                | Number of top submissions to show in the leaderboard output.                      | `10`                    | Positive integer (e.g., 1, 5, 10, 20, ...)                                         |
+| `metric`               | Evaluation metric to use when scoring predictions.                                | `rmse`                  | `rmse`, `mae`, `mse`, `f1`<br>*`f1` should only be used for classification tasks.* |
+
 * Example Fields:
 
   * `public_ground_truth`: ./data/public\_gt.csv
