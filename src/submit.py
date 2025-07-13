@@ -7,8 +7,6 @@ import yaml
 import pandas as pd
 from datetime import datetime
 
-os.chdir(Path(__file__).parent)
-
 
 CONFIG_PATH = 'config.yaml'
 DB_PATH = 'db/leaderboard.sqlite'
@@ -85,6 +83,14 @@ def main(args=None):
     parser.add_argument('-n', type=int, help='number of history entries to show')
     parsed = parser.parse_args(args)
 
+    # Convert prediction file path to absolute path before changing working directory
+    pred_abs_path = None
+    if parsed.pred:
+        pred_abs_path = Path(parsed.pred).resolve()
+    
+    # Change working directory to src directory
+    os.chdir(Path(__file__).parent)
+
     cfg = load_config()
     limit = parsed.n or cfg.get('default_history_limit', 10)
     os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
@@ -93,9 +99,7 @@ def main(args=None):
 
     if parsed.pred:
         username = parsed.username or get_git_username()
-        # Use the prediction file path as provided, resolving any relative paths
-        pred_path = Path(parsed.pred).resolve()
-        public_score, private_score = evaluate(pred_path, cfg)
+        public_score, private_score = evaluate(pred_abs_path, cfg)
         insert_submission(conn, username, os.path.basename(parsed.pred), public_score, private_score)
 
     print(fetch_history(conn, limit))
