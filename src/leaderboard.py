@@ -10,8 +10,8 @@ os.chdir(Path(__file__).parent)
 
 from evaluator import metrics
 
-CONFIG_PATH = os.path.join(os.path.dirname(__file__), 'config.yaml')
-DB_PATH = os.path.join(os.path.dirname(__file__), 'db', 'leaderboard.sqlite')
+CONFIG_PATH = 'config.yaml'
+DB_PATH = 'db/leaderboard.sqlite'
 
 
 def load_config():
@@ -60,6 +60,7 @@ def main(args=None):
 
     cfg = load_config()
     limit = parsed.n or cfg.get('default_leaderboard_limit', 10)
+    os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
     conn = sqlite3.connect(DB_PATH)
     init_db(conn)
     metric = cfg.get('metric', 'rmse')

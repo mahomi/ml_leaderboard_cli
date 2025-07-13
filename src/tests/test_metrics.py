@@ -1,3 +1,6 @@
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))) # 상위 디렉토리를 path에 추가
 from evaluator.metrics import rmse, mae, mse, f1
 
 
