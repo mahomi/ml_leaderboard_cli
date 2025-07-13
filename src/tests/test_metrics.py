@@ -1,4 +1,4 @@
-from prediction_leaderboard.evaluator.metrics import rmse, mae, mse, f1
+from evaluator.metrics import rmse, mae, mse, f1
 
 
 def test_rmse():

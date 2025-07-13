@@ -1,6 +1,7 @@
 import os
 import sqlite3
-from prediction_leaderboard import leaderboard, submit
+import leaderboard
+import submit
 
 
 def setup_db(tmp_path, monkeypatch):

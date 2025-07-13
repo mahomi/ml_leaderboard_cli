@@ -181,7 +181,7 @@ uv run submit.py my_prediction.csv -n 5
 ### 6. File Structure and Test Setup
 
 ```
-prediction_leaderboard/
+src/
 ├── leaderboard.py              # CLI script for leaderboard display only
 ├── submit.py                   # CLI script for submission and history management
 ├── config.yaml                 # Configuration file (GT paths, display options, etc.)

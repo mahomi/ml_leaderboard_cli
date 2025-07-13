@@ -1,12 +1,14 @@
 import argparse
 import os
 import sys
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+from pathlib import Path
 import sqlite3
 import yaml
 from tabulate import tabulate
 
-from prediction_leaderboard.evaluator import metrics
+os.chdir(Path(__file__).parent)
+
+from evaluator import metrics
 
 CONFIG_PATH = os.path.join(os.path.dirname(__file__), 'config.yaml')
 DB_PATH = os.path.join(os.path.dirname(__file__), 'db', 'leaderboard.sqlite')

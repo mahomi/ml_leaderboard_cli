@@ -1,6 +1,6 @@
 import os
 import sqlite3
-from prediction_leaderboard import submit
+import submit
 
 
 def test_submission(tmp_path, monkeypatch):
