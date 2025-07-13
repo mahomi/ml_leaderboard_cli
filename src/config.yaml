@@ -1,5 +1,0 @@
-public_ground_truth: data/public_gt.csv
-private_ground_truth: data/private_gt.csv
-default_leaderboard_limit: 10
-default_history_limit: 10
-metric: rmse

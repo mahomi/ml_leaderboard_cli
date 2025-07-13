@@ -3,18 +3,19 @@ import os
 import sys
 from pathlib import Path
 import sqlite3
-import yaml
+import configparser
 import pandas as pd
 from datetime import datetime
 
 
-CONFIG_PATH = 'config.yaml'
+CONFIG_PATH = 'config.ini'
 DB_PATH = 'db/leaderboard.sqlite'
 
 
 def load_config():
-    with open(CONFIG_PATH, 'r') as f:
-        return yaml.safe_load(f)
+    config = configparser.ConfigParser()
+    config.read(CONFIG_PATH)
+    return config['DEFAULT']
 
 
 def init_db(conn):

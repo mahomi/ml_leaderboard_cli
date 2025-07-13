@@ -10,8 +10,8 @@ def setup_db(tmp_path, monkeypatch):
     db_path = tmp_path / 'leaderboard.sqlite'
     monkeypatch.setattr(submit, 'DB_PATH', str(db_path))
     monkeypatch.setattr(leaderboard, 'DB_PATH', str(db_path))
-    monkeypatch.setattr(submit, 'CONFIG_PATH', os.path.join(os.path.dirname(__file__), '..', 'config.yaml'))
-    monkeypatch.setattr(leaderboard, 'CONFIG_PATH', os.path.join(os.path.dirname(__file__), '..', 'config.yaml'))
+    monkeypatch.setattr(submit, 'CONFIG_PATH', os.path.join(os.path.dirname(__file__), '..', 'config.ini'))
+    monkeypatch.setattr(leaderboard, 'CONFIG_PATH', os.path.join(os.path.dirname(__file__), '..', 'config.ini'))
     return db_path
 
 

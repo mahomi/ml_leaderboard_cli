@@ -8,7 +8,7 @@ import submit
 def test_submission(tmp_path, monkeypatch):
     db_path = tmp_path / 'leaderboard.sqlite'
     monkeypatch.setattr(submit, 'DB_PATH', str(db_path))
-    monkeypatch.setattr(submit, 'CONFIG_PATH', os.path.join(os.path.dirname(__file__), '..', 'config.yaml'))
+    monkeypatch.setattr(submit, 'CONFIG_PATH', os.path.join(os.path.dirname(__file__), '..', 'config.ini'))
 
     submit.main([os.path.join(os.path.dirname(__file__), '..', 'data', 'sample_pred.csv'), 'alice'])
 

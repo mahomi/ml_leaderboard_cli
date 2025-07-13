@@ -92,7 +92,7 @@
 
 ### 4. Leaderboard Configuration File
 
-* Managed via a `config.yaml` file in YAML format
+* Managed via a `config.ini` file in INI format
 Below are the key fields and their descriptions:
 
 | Field Name                    | Description                                                                       | Example Value           | Allowed Values / Notes                                               |
@@ -104,12 +104,13 @@ Below are the key fields and their descriptions:
 | `metric`                     | Evaluation metric used for scoring predictions.                                   | `rmse`                  | `rmse`, `mae`, `mse`, `f1` (Use `f1` only for classification tasks.) |ls
 
 * Example Fields:
-```yaml
-public_ground_truth: ./data/public_gt.csv
-private_ground_truth: ./data/private_gt.csv
-default_leaderboard_limit: 10
-default_history_limit: 10
-metric: rmse
+```ini
+[DEFAULT]
+public_ground_truth = ./data/public_gt.csv
+private_ground_truth = ./data/private_gt.csv
+default_leaderboard_limit = 10
+default_history_limit = 10
+metric = rmse
 ```
 
 ---
@@ -121,7 +122,7 @@ metric: rmse
 * `uv run leaderboard.py [options]`: Display leaderboard
 
 **Options:**
-- `-n N`: Number of top submissions to display (default: from config.yaml)
+- `-n N`: Number of top submissions to display (default: from config.ini)
 - `--with-private`: Include private score in output
 
 #### 5.2 Submission and History Commands (`submit.py`)
@@ -138,7 +139,7 @@ metric: rmse
   - **If Git config is not available**: Uses '-' as the username
 
 **Options:**
-- `-n N`: Number of recent submissions to display (default: from config.yaml)
+- `-n N`: Number of recent submissions to display (default: from config.ini)
 
 **Note:** The submission and history functionality has been separated into `submit.py` to provide clearer separation of concerns:
 - `leaderboard.py`: Focuses on displaying leaderboard rankings
@@ -184,7 +185,7 @@ uv run submit.py my_prediction.csv -n 5
 src/
 ├── leaderboard.py              # CLI script for leaderboard display only
 ├── submit.py                   # CLI script for submission and history management
-├── config.yaml                 # Configuration file (GT paths, display options, etc.)
+├── config.ini                  # Configuration file (GT paths, display options, etc.)
 ├── data/
 │   ├── public_gt.csv           # Example Public Test ground truth
 │   ├── private_gt.csv          # Example Private Test ground truth
