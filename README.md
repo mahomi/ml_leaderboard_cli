@@ -30,16 +30,14 @@
 
 #### 2.3 Leaderboard System
 
-* Output Modes:
+* **Leaderboard Display** (`leaderboard.py`):
 
-  1. **Leaderboard Mode** (default)
+  * Columns: `Rank`, `Username`, `Filename`, `Public Score`, `Private Score`
+  * `Private Score` is only shown when `--with-private` option is used
 
-     * Columns: `Rank`, `Username`, `Filename`, `Public Score`, `Private Score`
-     * `Private Score` is only shown when `--with-private` option is used
+* **Submission History** (`submit.py`):
 
-  2. **Submission History Mode** (`--history`)
-
-     * Columns: `Timestamp`, `Username`, `Filename`, `Public Score`
+  * Columns: `Timestamp`, `Username`, `Filename`, `Public Score`
 
 * Username is automatically extracted from Git config
 
@@ -47,7 +45,7 @@
 
 * Output Examples:
 
-  **Leaderboard Mode Output Example:**
+  **Leaderboard Display Output Example:**
 
   ```
   Rank | Username   | Filename           | Public Score | Private Score
@@ -59,7 +57,7 @@
 
   *(If `--with-private` is not used, the `Private Score` column is omitted)*
 
-  **Submission History Mode Output Example:**
+  **Submission History Output Example:**
 
   ```
   Timestamp           | Username | Filename        | Public Score
@@ -99,8 +97,8 @@ Below are the key fields and their descriptions:
 | ----------------------------- | --------------------------------------------------------------------------------- | ----------------------- | -------------------------------------------------------------------- |
 | `public_ground_truth`        | Path to the CSV file containing ground truth labels for the **public test** set.  | `./data/public_gt.csv`  | Must be a valid relative or absolute path.                           |
 | `private_ground_truth`       | Path to the CSV file containing ground truth labels for the **private test** set. | `./data/private_gt.csv` | Must be a valid relative or absolute path.                           |
-| `default_leaderboard_limit`  | Default number of top-ranked submissions to display in **leaderboard mode**.      | `10`                    | Positive integer (e.g., 5, 10, 20, ...). Can be overridden with `-n` argument. |
-| `default_history_limit`      | Default number of recent submission entries to display in **submission history mode**. | `10`                    | Positive integer (e.g., 5, 10, 50, ...). Can be overridden with `-n` argument. |
+| `default_leaderboard_limit`  | Default number of top-ranked submissions to display in **leaderboard display**.      | `10`                    | Positive integer (e.g., 5, 10, 20, ...). Can be overridden with `-n` argument. |
+| `default_history_limit`      | Default number of recent submission entries to display in **submission history**. | `10`                    | Positive integer (e.g., 5, 10, 50, ...). Can be overridden with `-n` argument. |
 | `metric`                     | Evaluation metric used for scoring predictions.                                   | `rmse`                  | `rmse`, `mae`, `mse`, `f1` (Use `f1` only for classification tasks.) |ls
 
 * Example Fields:
@@ -141,7 +139,7 @@ metric = rmse
 **Options:**
 - `-n N`: Number of recent submissions to display (default: from config.ini)
 
-**Note:** The submission and history functionality has been separated into `submit.py` to provide clearer separation of concerns:
+**Note:** The functionality has been separated into two distinct files to provide clearer separation of concerns:
 - `leaderboard.py`: Focuses on displaying leaderboard rankings
 - `submit.py`: Handles prediction file submission and submission history viewing
 
