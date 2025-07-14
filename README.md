@@ -172,6 +172,19 @@ uv run submit.py my_prediction.csv alice
 uv run submit.py my_prediction.csv -n 5
 ```
 
+#### 5.3 Web Interface (`webapp.py`)
+
+Run the Gradio-based web interface:
+
+```bash
+uv run webapp.py
+```
+
+The app shares the same SQLite database and offers two tabs:
+
+1. **Leaderboard** – view current rankings and refresh them.
+2. **Submit / History** – upload a prediction CSV with an optional username to record a submission and see recent history.
+
 ---
 
 ### 6. File Structure and Test Setup
@@ -180,6 +193,7 @@ uv run submit.py my_prediction.csv -n 5
 src/
 ├── leaderboard.py              # CLI script for leaderboard display only
 ├── submit.py                   # CLI script for submission and history management
+├── webapp.py                   # Gradio-based web interface
 ├── config.ini                  # Configuration file (GT paths, display options, etc.)
 ├── data/
 │   ├── public_gt.csv           # Example Public Test ground truth
