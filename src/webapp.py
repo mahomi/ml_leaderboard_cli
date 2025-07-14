@@ -86,13 +86,29 @@ def handle_submit(file, username):
     return get_history_df(), get_leaderboard_df()
 
 
+def mask_private_score(df):
+    df = df.copy()
+    if 'Private Score' in df.columns:
+        df['Private Score'] = '****'
+    return df
+
+
 def build_app():
     with gr.Blocks() as demo:
-        leaderboard_table = gr.Dataframe(value=get_leaderboard_df(), label="Leaderboard")
-        with gr.Tab("Leaderboard"):
+        show_private = gr.State(False)
+        with gr.Tab("Leaderboard") as leaderboard_tab:
+            leaderboard_table = gr.Dataframe(value=mask_private_score(get_leaderboard_df()), label="Leaderboard")
             refresh_btn = gr.Button("Refresh")
-            refresh_btn.click(lambda: get_leaderboard_df(), outputs=leaderboard_table)
-            leaderboard_table.render()
+            private_score_toggle = gr.Checkbox(label="Show Private Score", value=False)
+            def update_leaderboard_table(show):
+                df = get_leaderboard_df()
+                if show:
+                    return df
+                else:
+                    return mask_private_score(df)
+            private_score_toggle.change(update_leaderboard_table, inputs=private_score_toggle, outputs=leaderboard_table)
+            refresh_btn.click(lambda: mask_private_score(get_leaderboard_df()), outputs=leaderboard_table)
+            leaderboard_tab.select(lambda: mask_private_score(get_leaderboard_df()), None, leaderboard_table)
         with gr.Tab("Submit / History"):
             username = gr.Textbox(label="Username")
             file_input = gr.File(label="Prediction CSV")
