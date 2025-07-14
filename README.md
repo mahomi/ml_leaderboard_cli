@@ -13,6 +13,7 @@
 
 * CLI-based submission and result viewing of prediction CSV files (no GUI)
 * No login, server, or web environment required
+* Optional lightweight web UI using **Gradio** (`web.py`)
 
 #### 2.2 Data Processing and Evaluation Logic
 
@@ -73,7 +74,7 @@
   * Run: `uv run leaderboard.py`
   * Add package: `uv add <package-name>`
 
-* **Frontend:** None (CLI only)
+* **Frontend:** CLI plus optional Gradio web UI (`web.py`)
 
 * **Backend:** None (local execution)
 
@@ -172,6 +173,14 @@ uv run submit.py my_prediction.csv alice
 uv run submit.py my_prediction.csv -n 5
 ```
 
+#### 5.3 Web Interface (`web.py`)
+
+Launch a simple Gradio UI with separate tabs for the leaderboard and submission history:
+
+```bash
+uv run web.py
+```
+
 ---
 
 ### 6. File Structure and Test Setup
@@ -180,6 +189,7 @@ uv run submit.py my_prediction.csv -n 5
 src/
 ├── leaderboard.py              # CLI script for leaderboard display only
 ├── submit.py                   # CLI script for submission and history management
+├── web.py                      # Gradio web interface
 ├── config.ini                  # Configuration file (GT paths, display options, etc.)
 ├── data/
 │   ├── public_gt.csv           # Example Public Test ground truth
