@@ -33,7 +33,7 @@ def init_db(conn):
     conn.commit()
 
 
-def fetch_leaderboard(conn, limit, with_private, metric):
+def fetch_leaderboard(conn, limit, with_private, metric, leaderboard_name):
     order = 'DESC' if metric == 'f1' else 'ASC'
     cur = conn.execute(
         f'SELECT username, filename, public_score, private_score FROM submissions '
@@ -50,7 +50,17 @@ def fetch_leaderboard(conn, limit, with_private, metric):
         if with_private:
             r.append(f"{row[3]:.4f}")
         table.append(r)
-    return tabulate(table, headers=headers, tablefmt="plain")
+    
+    # 리더보드명을 예쁘게 출력
+    title_length = len(leaderboard_name)
+    separator = "=" * (title_length + 4)
+    result = f"\n{separator}\n"
+    result += f"  {leaderboard_name}\n"
+    result += f"{separator}\n\n"
+    result += tabulate(table, headers=headers, tablefmt="plain")
+    # result += f"\n\n{separator}\n"
+    result += f"\n"
+    return result
 
 
 def main(args=None):
@@ -65,7 +75,8 @@ def main(args=None):
     conn = sqlite3.connect(DB_PATH)
     init_db(conn)
     metric = cfg.get('metric', 'rmse')
-    print(fetch_leaderboard(conn, limit, parsed.with_private, metric))
+    leaderboard_name = cfg.get('leaderboard_name', 'Leaderboard')
+    print(fetch_leaderboard(conn, limit, parsed.with_private, metric, leaderboard_name))
 
 
 if __name__ == '__main__':

@@ -53,7 +53,7 @@ def insert_submission(conn, username, filename, public_score, private_score):
     conn.commit()
 
 
-def fetch_history(conn, limit):
+def fetch_history(conn, limit, leaderboard_name):
     cur = conn.execute(
         'SELECT timestamp, username, filename, public_score FROM submissions ORDER BY id DESC LIMIT ?',
         (limit,)
@@ -64,7 +64,16 @@ def fetch_history(conn, limit):
     for row in rows:
         table.append([row[0], row[1], row[2], f"{row[3]:.4f}"])
     from tabulate import tabulate
-    return tabulate(table, headers=headers, tablefmt="plain")
+    
+    # 리더보드명을 예쁘게 출력
+    title_length = len(leaderboard_name)
+    separator = "=" * (title_length + 4)
+    result = f"\n{separator}\n"
+    result += f"  {leaderboard_name}\n"
+    result += f"{separator}\n\n"
+    result += tabulate(table, headers=headers, tablefmt="plain")
+    result += f"\n"
+    return result
 
 
 def get_git_username():
@@ -103,7 +112,7 @@ def main(args=None):
         public_score, private_score = evaluate(pred_abs_path, cfg)
         insert_submission(conn, username, os.path.basename(parsed.pred), public_score, private_score)
 
-    print(fetch_history(conn, limit))
+    print(fetch_history(conn, limit, cfg['leaderboard_name']))
 
 
 if __name__ == '__main__':

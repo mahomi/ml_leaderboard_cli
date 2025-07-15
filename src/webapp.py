@@ -35,6 +35,7 @@ def get_leaderboard_df():
     cfg = load_config()
     metric = cfg.get('metric', 'rmse')
     limit = int(cfg.get('default_leaderboard_limit', 10))
+    leaderboard_name = cfg.get('leaderboard_name', 'Leaderboard')
     os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
     conn = sqlite3.connect(DB_PATH)
     init_db(conn)
@@ -49,7 +50,7 @@ def get_leaderboard_df():
     df.index += 1
     df.reset_index(inplace=True)
     df.rename(columns={'index': 'Rank'}, inplace=True)
-    return df
+    return df, leaderboard_name
 
 
 def get_history_df():
@@ -70,7 +71,9 @@ def get_history_df():
 def handle_submit(file, username):
     import submit
     if file is None:
-        return get_history_df(), get_leaderboard_df()
+        history_df = get_history_df()
+        leaderboard_df, leaderboard_name = get_leaderboard_df()
+        return history_df, mask_private_score(leaderboard_df)
     cfg = load_config()
     os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
     conn = sqlite3.connect(DB_PATH)
@@ -83,7 +86,9 @@ def handle_submit(file, username):
         public_score,
         private_score,
     )
-    return get_history_df(), get_leaderboard_df()
+    history_df = get_history_df()
+    leaderboard_df, leaderboard_name = get_leaderboard_df()
+    return history_df, mask_private_score(leaderboard_df)
 
 
 def mask_private_score(df):
@@ -96,10 +101,13 @@ def mask_private_score(df):
 def build_app():
     with gr.Blocks() as demo:
         with gr.Tab("Leaderboard") as leaderboard_tab:
-            leaderboard_table = gr.Dataframe(value=mask_private_score(get_leaderboard_df()), label="Leaderboard")
+            leaderboard_df, leaderboard_name = get_leaderboard_df()
+            gr.Markdown(f"# {leaderboard_name}")
+            leaderboard_table = gr.Dataframe(value=mask_private_score(leaderboard_df), label="Leaderboard")
             refresh_btn = gr.Button("Refresh")
             def update_leaderboard_table():
-                return mask_private_score(get_leaderboard_df())
+                df, name = get_leaderboard_df()
+                return mask_private_score(df)
             refresh_btn.click(update_leaderboard_table, outputs=leaderboard_table)
             leaderboard_tab.select(update_leaderboard_table, None, leaderboard_table)
         with gr.Tab("Submit / History"):
@@ -109,10 +117,13 @@ def build_app():
             history_table = gr.Dataframe(value=get_history_df(), label="History")
             submit_btn.click(handle_submit, inputs=[file_input, username], outputs=[history_table, leaderboard_table])
         with gr.Tab("Leaderboard(Private)") as private_leaderboard_tab:
-            private_leaderboard_table = gr.Dataframe(value=get_leaderboard_df(), label="Leaderboard (Private)")
+            private_leaderboard_df, private_leaderboard_name = get_leaderboard_df()
+            gr.Markdown(f"# {private_leaderboard_name} (Private)")
+            private_leaderboard_table = gr.Dataframe(value=private_leaderboard_df, label="Leaderboard (Private)")
             private_refresh_btn = gr.Button("Refresh")
             def update_private_leaderboard_table():
-                return get_leaderboard_df()
+                df, name = get_leaderboard_df()
+                return df
             private_refresh_btn.click(update_private_leaderboard_table, outputs=private_leaderboard_table)
             private_leaderboard_tab.select(update_private_leaderboard_table, None, private_leaderboard_table)
     return demo
