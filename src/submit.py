@@ -53,7 +53,7 @@ def insert_submission(conn, username, filename, public_score, private_score):
     conn.commit()
 
 
-def fetch_history(conn, limit, leaderboard_name):
+def fetch_history(conn, limit, leaderboard_name, tablefmt):
     cur = conn.execute(
         'SELECT timestamp, username, filename, public_score FROM submissions ORDER BY id DESC LIMIT ?',
         (limit,)
@@ -71,7 +71,7 @@ def fetch_history(conn, limit, leaderboard_name):
     result = f"\n{separator}\n"
     result += f"  {leaderboard_name}\n"
     result += f"{separator}\n\n"
-    result += tabulate(table, headers=headers, tablefmt="plain")
+    result += tabulate(table, headers=headers, tablefmt=tablefmt)
     result += f"\n"
     return result
 
@@ -91,6 +91,7 @@ def main(args=None):
     parser.add_argument('pred', nargs='?', help='prediction CSV file')
     parser.add_argument('username', nargs='?', help='username for submission')
     parser.add_argument('-n', type=int, help='number of history entries to show')
+    parser.add_argument('--tablefmt', type=str, help='table format (e.g., plain, grid, simple, fancy_grid)')
     parsed = parser.parse_args(args)
 
     # Convert prediction file path to absolute path before changing working directory
@@ -103,6 +104,7 @@ def main(args=None):
 
     cfg = load_config()
     limit = parsed.n or cfg.get('default_history_limit', 10)
+    tablefmt = parsed.tablefmt or cfg.get('tablefmt', 'plain')
     os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
     conn = sqlite3.connect(DB_PATH)
     init_db(conn)
@@ -112,7 +114,7 @@ def main(args=None):
         public_score, private_score = evaluate(pred_abs_path, cfg)
         insert_submission(conn, username, os.path.basename(parsed.pred), public_score, private_score)
 
-    print(fetch_history(conn, limit, cfg['leaderboard_name']))
+    print(fetch_history(conn, limit, cfg['leaderboard_name'], tablefmt))
 
 
 if __name__ == '__main__':

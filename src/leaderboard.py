@@ -33,7 +33,7 @@ def init_db(conn):
     conn.commit()
 
 
-def fetch_leaderboard(conn, limit, with_private, metric, leaderboard_name):
+def fetch_leaderboard(conn, limit, with_private, metric, leaderboard_name, tablefmt):
     order = 'DESC' if metric == 'f1' else 'ASC'
     cur = conn.execute(
         f'SELECT username, filename, public_score, private_score FROM submissions '
@@ -57,7 +57,7 @@ def fetch_leaderboard(conn, limit, with_private, metric, leaderboard_name):
     result = f"\n{separator}\n"
     result += f"  {leaderboard_name}\n"
     result += f"{separator}\n\n"
-    result += tabulate(table, headers=headers, tablefmt="plain")
+    result += tabulate(table, headers=headers, tablefmt=tablefmt)
     # result += f"\n\n{separator}\n"
     result += f"\n"
     return result
@@ -67,16 +67,18 @@ def main(args=None):
     parser = argparse.ArgumentParser(description="Display leaderboard")
     parser.add_argument('-n', type=int, help='number of top submissions to display')
     parser.add_argument('--with-private', action='store_true', help='show private scores')
+    parser.add_argument('--tablefmt', type=str, help='table format (e.g., plain, grid, simple, fancy_grid)')
     parsed = parser.parse_args(args)
 
     cfg = load_config()
     limit = parsed.n or cfg.get('default_leaderboard_limit', 10)
+    tablefmt = parsed.tablefmt or cfg.get('tablefmt', 'plain')
     os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
     conn = sqlite3.connect(DB_PATH)
     init_db(conn)
     metric = cfg.get('metric', 'rmse')
     leaderboard_name = cfg.get('leaderboard_name', 'Leaderboard')
-    print(fetch_leaderboard(conn, limit, parsed.with_private, metric, leaderboard_name))
+    print(fetch_leaderboard(conn, limit, parsed.with_private, metric, leaderboard_name, tablefmt))
 
 
 if __name__ == '__main__':

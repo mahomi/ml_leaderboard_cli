@@ -96,7 +96,8 @@ Below are the key fields and their descriptions:
 | `private_ground_truth`       | Path to the CSV file containing ground truth labels for the **private test** set. | `./data/private_gt.csv` | Must be a valid relative or absolute path.                           |
 | `default_leaderboard_limit`  | Default number of top-ranked submissions to display in **leaderboard display**.      | `10`                    | Positive integer (e.g., 5, 10, 20, ...). Can be overridden with `-n` argument. |
 | `default_history_limit`      | Default number of recent submission entries to display in **submission history**. | `10`                    | Positive integer (e.g., 5, 10, 50, ...). Can be overridden with `-n` argument. |
-| `metric`                     | Evaluation metric used for scoring predictions.                                   | `rmse`                  | `rmse`, `mae`, `mse`, `f1` (Use `f1` only for classification tasks.) |ls
+| `metric`                     | Evaluation metric used for scoring predictions.                                   | `rmse`                  | `rmse`, `mae`, `mse`, `f1` (Use `f1` only for classification tasks.) |
+| `tablefmt`                   | Default table format for displaying leaderboard and history.                    | `plain`                 | `plain`, `grid`, `simple`, `fancy_grid`, `pipe`, `orgtbl`, `rst`, `html`, `latex`, etc. |
 
 * Example Fields:
 ```ini
@@ -106,6 +107,7 @@ private_ground_truth = ./data/private_gt.csv
 default_leaderboard_limit = 10
 default_history_limit = 10
 metric = rmse
+tablefmt = plain
 ```
 
 ---
@@ -119,6 +121,7 @@ metric = rmse
 **Options:**
 - `-n N`: Number of top submissions to display (default: from config.ini)
 - `--with-private`: Include private score in output
+- `--tablefmt TABLEFMT`: Table format for display (default: from config.ini)
 
 #### 5.2 Submission and History Commands (`submit.py`)
 
@@ -135,6 +138,7 @@ metric = rmse
 
 **Options:**
 - `-n N`: Number of recent submissions to display (default: from config.ini)
+- `--tablefmt TABLEFMT`: Table format for display (default: from config.ini)
 
 **Note:** The functionality has been separated into two distinct files to provide clearer separation of concerns:
 - `leaderboard.py`: Focuses on displaying leaderboard rankings
@@ -152,6 +156,15 @@ uv run leaderboard.py -n 5 --with-private
 
 # Display top 20 submissions without private scores
 uv run leaderboard.py -n 20
+
+# Display with grid table format
+uv run leaderboard.py --tablefmt grid
+
+# Display with fancy grid table format
+uv run leaderboard.py --tablefmt fancy_grid
+
+# Display with simple table format
+uv run leaderboard.py --tablefmt simple
 ```
 
 *Submission and History:*
@@ -170,9 +183,54 @@ uv run submit.py my_prediction.csv alice
 
 # Submit prediction file and show top 5 recent submissions
 uv run submit.py my_prediction.csv -n 5
+
+# Display history with grid table format
+uv run submit.py --tablefmt grid
+
+# Display history with simple table format
+uv run submit.py --tablefmt simple
 ```
 
-#### 5.3 Web Interface (`webapp.py`)
+#### 5.3 Table Format Options
+
+The `--tablefmt` option allows you to customize the display format of tables. This functionality is powered by the [tabulate](https://github.com/astanin/python-tabulate) library, which provides a wide variety of table formatting options. Available formats include:
+
+**Basic Formats:**
+- `plain` - Simple text format (default)
+- `simple` - Simple table with separators
+- `grid` - Grid-style table with borders
+- `pipe` - Pipe-separated format
+
+**Unicode Formats:**
+- `fancy_grid` - Unicode grid with double borders
+- `fancy_outline` - Unicode outline style
+- `fancy_light` - Light Unicode borders
+- `fancy_heavy` - Heavy Unicode borders
+- `double` - Double-line borders
+- `outline` - Outline style
+- `rounded_outline` - Rounded outline style
+
+**Document Formats:**
+- `orgtbl` - Org-mode table format
+- `rst` - reStructuredText format
+- `mediawiki` - MediaWiki table format
+- `html` - HTML table format
+- `latex` - LaTeX table format
+- `latex_raw` - Raw LaTeX format
+- `latex_booktabs` - LaTeX booktabs format
+- `textile` - Textile format
+
+**Data Formats:**
+- `csv` - CSV format
+- `tsv` - TSV format
+- `json` - JSON format
+
+**Priority Order:**
+1. Command line argument `--tablefmt` (highest priority)
+2. `config.ini` setting `tablefmt`
+3. Default value `plain` (lowest priority)
+
+#### 5.4 Web Interface (`webapp.py`)
 
 Run the Gradio-based web interface:
 
